@@ -12,8 +12,21 @@ public class GameWindow extends JFrame {
     private static final int WIN_POS_X = 800;
     private static final int WIN_POS_Y = 300;
 
-    private static Lesson_8.StartNewGameWindow startNewGameWindow;
-    private static Map field;
+
+
+    private static StartNewGameWindow startNewGameWindow;
+
+    public static GUIMap getField() {
+        return field;
+    }
+
+    private static GUIMap field;
+
+
+    private boolean humanVsHumanMode;
+    private int fieldSizeX;
+    private int fieldSizeY;
+    private int winLen;
 
     public GameWindow() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -22,7 +35,7 @@ public class GameWindow extends JFrame {
 
         setResizable(false);
 
-        JPanel bottomPanel = new JPanel(new GridLayout(1,2));
+        JPanel bottomPanel = new JPanel(new GridLayout(1, 2));
 
         JButton btnNewGame = new JButton("Start new game");
         JButton btnExit = new JButton("Exit");
@@ -32,8 +45,8 @@ public class GameWindow extends JFrame {
 
         add(bottomPanel, BorderLayout.SOUTH);
 
-        startNewGameWindow = new Lesson_8.StartNewGameWindow(this);
-        field = new Map();
+        startNewGameWindow = new StartNewGameWindow(this);
+        field = new GUIMap();
         add(field, BorderLayout.CENTER);
 
         btnNewGame.addActionListener(new ActionListener() {
@@ -56,5 +69,30 @@ public class GameWindow extends JFrame {
 
     void startNewGame(int mode, int fieldSizeX, int fieldSizeY, int winLen) {
         field.startNewGame(mode, fieldSizeX, fieldSizeY, winLen);
+        this.humanVsHumanMode = (mode == 1? true: false);
+        this.fieldSizeX = fieldSizeX;
+        this.fieldSizeY = fieldSizeY;
+        this.winLen = winLen;
+
+    }
+
+    public boolean isHumanVsHumanMode() {
+        return humanVsHumanMode;
+    }
+
+    public int getFieldSizeX() {
+        return fieldSizeX;
+    }
+
+    public int getFieldSizeY() {
+        return fieldSizeY;
+    }
+
+    public int getWinLen() {
+        return winLen;
+    }
+
+    public static StartNewGameWindow getStartNewGameWindow() {
+        return startNewGameWindow;
     }
 }

@@ -27,6 +27,10 @@ public class StartNewGameWindow extends JFrame {
     private JSlider slFileidSize;
     private JSlider slWinLength;
 
+
+
+    private JButton btnStartGame;
+
     public StartNewGameWindow(GameWindow gameWindow)  {
         this.gameWindow = gameWindow;
         setSize(WIN_WIDTH, WIN_HEIGHT);
@@ -39,7 +43,7 @@ public class StartNewGameWindow extends JFrame {
         addGameControlsMode();
         addGameControlsFieldWinLength();
 
-        JButton btnStartGame = new JButton("Start a game!");
+        btnStartGame = new JButton("Start a game!");
         add(btnStartGame);
         btnStartGame.addActionListener(new ActionListener() {
             @Override
@@ -52,9 +56,9 @@ public class StartNewGameWindow extends JFrame {
     void btnStartGameClick() {
         int gameMode;
         if (jrbHumVsAi.isSelected()) {
-            gameMode = Map.MODE_H_V_A;
+            gameMode = GUIMap.MODE_H_V_A;
         } else {
-            gameMode = Map.MODE_H_V_H;
+            gameMode = GUIMap.MODE_H_V_H;
         }
         int fieldSize = slFileidSize.getValue();
         int winLen = slWinLength.getValue();
@@ -102,5 +106,8 @@ public class StartNewGameWindow extends JFrame {
 
     }
 
+    public JButton getBtnStartGame() {
+        return btnStartGame;
+    }
 
 }

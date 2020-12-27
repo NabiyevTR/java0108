@@ -6,9 +6,12 @@ public interface IPlayer {
 
     public void nextTurn();
 
+    public void nextTurn(int X, int Y);
+
     public String getName();
 
     public DOTS getDot();
 
     public void setDot(DOTS dot);
+
 }

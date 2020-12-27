@@ -1,9 +1,9 @@
 package ru.geekbrains.ntr_0108.players;
 
-import ru.geekbrains.ntr_0104.AIHelpers;
-import ru.geekbrains.ntr_0104.DOTS;
-import ru.geekbrains.ntr_0104.Map;
-import ru.geekbrains.ntr_0104.MapHelpers;
+//import ru.geekbrains.ntr_0108.AIHelpers;
+import ru.geekbrains.ntr_0108.DOTS;
+import ru.geekbrains.ntr_0108.Map;
+import ru.geekbrains.ntr_0108.MapHelpers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import java.util.Random;
 
 public class SmartBotLogic4inRow {
 
+    /*
     private static final int DOTS_TO_WIN = 4;
     private static final boolean PRINT_VALUE_MAP = false;
 
@@ -302,5 +303,5 @@ public class SmartBotLogic4inRow {
         int[] xRow;
         int[] yRow;
     }
-
+*/
 }
