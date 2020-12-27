@@ -12,16 +12,11 @@ public class GameWindow extends JFrame {
     private static final int WIN_POS_X = 800;
     private static final int WIN_POS_Y = 300;
 
-
-
     private static StartNewGameWindow startNewGameWindow;
-
     public static GUIMap getField() {
         return field;
     }
-
     private static GUIMap field;
-
 
     private boolean humanVsHumanMode;
     private int fieldSizeX;

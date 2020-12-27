@@ -2,11 +2,15 @@ package ru.geekbrains.ntr_0108;
 
 public class Map {
     private static Map instance;
-    //Todo check for maxsize
-    private final static int MAXSIZE = 10;
-    private static int roundSize = MAXSIZE;
 
-    private DOTS map[][];
+    private final static int MAXSIZE_X = 10;
+    private final static int MAXSIZE_Y = 10;
+    private static int roundSizeX = MAXSIZE_X;
+    private static int roundSizeY = MAXSIZE_Y;
+
+    private static int winSize = 3;
+
+    private static DOTS map[][];
 
     public static Map getInstance() {
         if (instance == null) {
@@ -16,13 +20,13 @@ public class Map {
     }
 
     private Map() {
-        this.map = new DOTS[MAXSIZE][MAXSIZE];
+        this.map = new DOTS[MAXSIZE_Y][MAXSIZE_X];
         clear();
     }
 
     public void clear() {
-        for (int i = 0; i < MAXSIZE; i++) {
-            for (int j = 0; j < MAXSIZE; j++) {
+        for (int i = 0; i < MAXSIZE_Y; i++) {
+            for (int j = 0; j < MAXSIZE_X; j++) {
                 map[i][j] = DOTS.EMPTY;
             }
         }
@@ -36,116 +40,101 @@ public class Map {
         map[y][x] = dot;
     }
 
-    public void setSize(int roundSize) {
-        if (roundSize <= MAXSIZE) {
-            this.roundSize = roundSize;
+    public void setSize(int roundSizeX, int roundSizeY) {
+        if (roundSizeX < MAXSIZE_X) {
+            this.roundSizeX = roundSizeX;
+        }
+        if (roundSizeY < MAXSIZE_Y) {
+            this.roundSizeY = roundSizeY;
         }
     }
 
-    public int getSize() {
-        return roundSize;
+    public static void setWinSize(int winSize) {
+        Map.winSize = winSize;
+    }
+
+    public static int getWinSize() {
+        return winSize;
+    }
+
+    public int getSizeX() {
+        return roundSizeX;
+    }
+
+    public int getSizeY() {
+        return roundSizeY;
     }
 
     public DOTS getCell(int i, int j) {
         return map[i][j];
     }
 
-    public void printMap() {
-        for (int i = 0; i <= roundSize; i++) {
-            System.out.print(i + " | ");
-        }
-        System.out.println();
-        for (int i = 0; i < roundSize; i++) {
-            System.out.print((i + 1) + " | ");
-            for (int j = 0; j < roundSize; j++) {
-                System.out.print(map[i][j].getSymbol() + " | ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-    DOTS[][] getMap() {
-        return map;
-    }
-
     public boolean isFull() {
-        for (int i = 0; i < roundSize; i++) {
-            for (int j = 0; j < roundSize; j++) {
+        for (int i = 0; i < roundSizeY; i++) {
+            for (int j = 0; j < roundSizeX; j++) {
                 if (map[i][j] == DOTS.EMPTY) return false;
             }
         }
         return true;
     }
 
-    public boolean hasInRow(DOTS dot, int dotsToWin) {
+    public boolean checkWin(DOTS dot) {
+        for (int v = 0; v < roundSizeY; v++) {
+            for (int h = 0; h < roundSizeX; h++) {
+                //анализ наличие поля для проверки
+                if (h + winSize <= roundSizeX) {
+                    //по горизонтале
+                    if (checkLineHorisont(v, h, dot) >= winSize) return true;
 
-        if (dotsToWin > roundSize) return false;
-
-        //ToDO зачем?
-        String winCombination = MapHelpers.winCombination(dot, dotsToWin);
-
-
-        // Проверка по горизонталям
-        for (int i = 0; i < roundSize; i++) {
-            if (MapHelpers.rowToString(map[i]).contains(winCombination)) {
-                return true;
-            }
-        }
-
-        // Проверка по вертикалям
-        for (int i = 0; i < roundSize; i++) {
-            DOTS[] column = new DOTS[roundSize];
-            for (int j = 0; j < roundSize; j++) {
-                column[j] = map[j][i];
-            }
-            if (MapHelpers.rowToString(column).contains(winCombination)) {
-                return true;
-            }
-        }
-
-        // Проверка по главным диогоналям
-        for (int i = 0; i < roundSize - dotsToWin + 1; i++) {
-            DOTS[] diagonal = new DOTS[roundSize - i];
-            for (int j = 0; j < roundSize - i; j++) {
-                diagonal[j] = map[i + j][j];
-            }
-            if (MapHelpers.rowToString(diagonal).contains(winCombination)) {
-                return true;
-            }
-        }
-
-        for (int i = 1; i < roundSize - dotsToWin + 1; i++) {
-            DOTS[] diagonal = new DOTS[roundSize - i];
-            for (int j = 0; j < roundSize - i; j++) {
-                diagonal[j] = map[j][i + j];
-            }
-            if (MapHelpers.rowToString(diagonal).contains(winCombination)) {
-                return true;
-            }
-        }
-
-        // Проверка по второстепенным диогоналям
-        for (int i = dotsToWin - 1; i < roundSize; i++) {
-            DOTS[] diagonal = new DOTS[i + 1];
-            for (int j = 0; j < i + 1; j++) {
-                diagonal[j] = map[j][i - j];
-            }
-            if (MapHelpers.rowToString(diagonal).contains(winCombination)) {
-                return true;
-            }
-        }
-
-        for (int i = 1; i < roundSize - dotsToWin + 1; i++) {
-            DOTS[] diagonal = new DOTS[roundSize - i];
-            for (int j = 0; j < roundSize - i; j++) {
-                diagonal[j] = map[j + i][roundSize - j - 1];
-            }
-            if (MapHelpers.rowToString(diagonal).contains(winCombination)) {
-                return true;
+                    if (v - winSize > -2) {                            //вверх по диагонале
+                        if (checkDiaUp(v, h, dot) >= winSize) return true;
+                    }
+                    if (v + winSize <= roundSizeY) {                       //вниз по диагонале
+                        if (checkDiaDown(v, h, dot) >= winSize) return true;
+                    }
+                }
+                if (v + winSize <= roundSizeY) {                       //по вертикале
+                    if (checkLineVertical(v, h, dot) >= winSize) return true;
+                }
             }
         }
         return false;
+    }
+
+    //проверка заполнения всей линии по диагонале вверх
+
+    private static int checkDiaUp(int v, int h, DOTS dot) {
+        int count = 0;
+        for (int i = 0, j = 0; j < winSize; i--, j++) {
+            if ((map[v + i][h + j] == dot)) count++;
+        }
+        return count;
+    }
+    //проверка заполнения всей линии по диагонале вниз
+
+    private static int checkDiaDown(int v, int h, DOTS dot) {
+        int count = 0;
+        for (int i = 0; i < winSize; i++) {
+            if ((map[i + v][i + h] == dot)) count++;
+        }
+        return count;
+    }
+
+    private static int checkLineHorisont(int v, int h, DOTS dot) {
+        int count = 0;
+        for (int j = h; j < winSize + h; j++) {
+            if ((map[v][j] == dot)) count++;
+        }
+        return count;
+    }
+
+    //проверка заполнения всей линии по вертикале
+    private static int checkLineVertical(int v, int h, DOTS dot) {
+        int count = 0;
+        for (int i = v; i < winSize + v; i++) {
+            if ((map[i][h] == dot)) count++;
+        }
+        return count;
     }
 
 }

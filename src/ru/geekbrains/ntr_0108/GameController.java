@@ -12,15 +12,15 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 public class GameController {
 
-    public static Map map;
-    public static int sizeX;
-    public static int sizeY;
-    public static int cellWidth;
-    public static int cellHeight;
-    public static int winLen;
-    public static boolean gameOver = false;
-    public static IPlayer player1;
-    public static IPlayer player2;
+    private static Map map;
+    private static int sizeX;
+    private static int sizeY;
+    private static int cellWidth;
+    private static int cellHeight;
+    private static int winLen;
+    private static boolean gameOver = false;
+    private static IPlayer player1;
+    private static IPlayer player2;
     private static GameWindow gameWindow;
     private static int turnsCounter = 0;
     private static boolean isHumanVsHumanMode = true;
@@ -49,6 +49,10 @@ public class GameController {
                 winLen = gameWindow.getWinLen();
                 cellHeight = gameWindow.getField().getCellHeight();
                 cellWidth = gameWindow.getField().getCellWidth();
+
+                map.setSize(sizeX, sizeY);
+                map.setWinSize(winLen);
+
                 player1 = new HumanPlayer("Игрок 1");
                 if (gameWindow.isHumanVsHumanMode()) {
                     player2 = new HumanPlayer("Игрок 2");
@@ -59,7 +63,6 @@ public class GameController {
                 player2.setDot(DOTS.ZERO);
             }
         });
-
 
         gameWindow.getField().addMouseListener(new MouseAdapter() {
             @Override
@@ -74,7 +77,6 @@ public class GameController {
 
                     } else {
                         gameTurn(player2, cellX, cellY);
-                        System.out.println("2");
                     }
                     turnsCounter++;
                 }
@@ -86,59 +88,37 @@ public class GameController {
 
         player.nextTurn(cellX, cellY);
         gameWindow.getField().repaint();
+
+
         if (playerWin(player)) {
             showMessageDialog(gameWindow, "Выиграл " + player.getName() + "!");
             gameOver = true;
+            return;
         }
+        if (map.isFull()) {
+            showMessageDialog(gameWindow, "Ничья!");
+            gameOver = true;
+            return;
+        }
+
         if (!isHumanVsHumanMode) {
+            player2.nextTurn();
             gameWindow.getField().repaint();
             turnsCounter++;
             if (playerWin(player2)) {
                 showMessageDialog(gameWindow, "Выиграл " + player2.getName() + "!");
                 gameOver = true;
+                return;
+            }
+            if (map.isFull()) {
+                showMessageDialog(gameWindow, "Ничья!");
+                gameOver = true;
+                return;
             }
         }
     }
 
     public static boolean playerWin(IPlayer player) {
-        return map.hasInRow(player.getDot(), winLen);
+        return map.checkWin(player.getDot());
     }
-
-
-
-
- /*   public static void ticTacToeGame(IPlayer player1, IPlayer player2) {
-
-        int turnsCounter = 0;
-        map = Map.getInstance(SIZE);
-        map.printMap();
-        player1.setDot(DOTS.CROSS);
-        player2.setDot(DOTS.ZERO);
-
-        while (!gameOver){
-            if (turnsCounter % 2 == 0) {
-                gameTurn(player1);
-            } else {
-                gameTurn(player2);
-            }
-            turnsCounter++;
-        }
-    }
-
-    public static void gameTurn(IPlayer player) {
-        player.nextTurn();
-        map.printMap();
-        if (playerWin(player)) {
-            System.out.printf("Выиграл %s\n", player.getName());
-            gameOver = true;
-        } else if (map.isFull()) {
-            System.out.println("Ничья!");
-            gameOver = true;
-        }
-
-    }
-
-    public static boolean playerWin (IPlayer player) {
-        return map.hasInRow(player.getDot(), DOTS_TO_WIN);
-    } */
 }

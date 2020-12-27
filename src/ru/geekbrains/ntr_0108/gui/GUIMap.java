@@ -24,13 +24,17 @@ public class GUIMap extends JPanel {
     }
 
     @Override
+    public void update(Graphics g) {
+        super.update(g);
+    }
+
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         render(g);
     }
 
     boolean startNewGame(int mode, int fieldSizeX, int fieldSizeY, int winLen) {
-        System.out.println(mode + " " + fieldSizeX + " " + fieldSizeY + " " + winLen);
         this.fieldSizeX = fieldSizeX;
         this.fieldSizeY = fieldSizeY;
         this.winLen = winLen;
